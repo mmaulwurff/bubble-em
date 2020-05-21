@@ -1,0 +1,5 @@
+Sprite be_2A0, 14, 12
+{
+  Patch be_1A0, 0, 0
+  Offset 7, 6
+}
