@@ -28,17 +28,29 @@ class be_Bubble : Actor
 class be_Magic : Inventory
 {
 
-  void init(Actor pretender, Actor original)
+  void init(Actor original)
   {
     initOriginal(original);
-    initPretender(pretender);
+    initPretender();
     initBubble();
 
     mLifetime  = 0;
   }
 
-  private void initPretender(Actor pretender)
+  void restore()
   {
+    mOriginal.A_SetRenderStyle(mOriginalAlpha, mOriginalRenderStyle);
+
+    mPretender.destroy();
+    mBubble.destroy();
+    GoAwayAndDie();
+  }
+
+  private void initPretender()
+  {
+    let pos       = mOriginal.pos + (0, 0, 10);
+    let pretender = Actor.Spawn(mOriginal.getClass(), pos);
+
     mPretender = pretender;
 
     pretender.angle            = mOriginal.angle;
@@ -48,7 +60,7 @@ class be_Magic : Inventory
     pretender.bNoInteraction   = true;
     pretender.bNogravity       = true;
     pretender.A_SetTics(int.Max);
-    mOrigScale = owner.scale;
+    mOrigScale = pretender.scale;
 
     level.total_monsters -= pretender.bCountKill;
   }
@@ -66,11 +78,11 @@ class be_Magic : Inventory
 
   private void initBubble()
   {
-    Vector3 bubblePos = owner.pos + (0, 0, owner.height / 2);
+    Vector3 bubblePos = mPretender.pos + (0, 0, mPretender.height / 2);
     mBubble = Actor.Spawn("be_Bubble", bubblePos);
-    double bubbleScale = max(owner.radius / 20, owner.height / 40);
+    double bubbleScale = max(mPretender.radius / 20, mPretender.height / 40);
     mOrigBubbleScale = mBubble.scale * bubbleScale;
-    mBubble.floatBobPhase = owner.FloatBobPhase;
+    mBubble.floatBobPhase = mPretender.floatBobPhase;
     let shade = String.format( "%x%x%x%x%x%x"
                              , random(9, 0xc)
                              , random(9, 0xc)
@@ -84,17 +96,15 @@ class be_Magic : Inventory
 
   override void Tick()
   {
-    if (owner == NULL) { return; }
-
     if (mLifetime < DURATION)
     {
       double ratio      = double(mLifetime) / DURATION;
       double scaleRatio = (1 - ratio) * (1 - TARGET_SCALE) + TARGET_SCALE;
 
-      owner  .scale = scaleRatio * mOrigScale;
+      mPretender.scale = scaleRatio * mOrigScale;
       mBubble.scale = scaleRatio * mOrigBubbleScale;
       mBubble.alpha = ratio * 0.6;
-      mBubble.setOrigin(owner.pos + (0, 0, owner.height * scaleRatio / 2), true);
+      mBubble.setOrigin(mPretender.pos + (0, 0, mPretender.height * scaleRatio / 2), true);
     }
     else if (mLifetime == DURATION)
     {
@@ -146,16 +156,27 @@ class be_EventHandler : EventHandler
 
   private void inflate(Actor died)
   {
-    let pos       = died.pos + (0, 0, 10);
-    let pretender = Actor.Spawn(died.getClass(), pos);
-    pretender.giveInventory(MAGIC, 1);
-    let magic     = be_Magic(pretender.findInventory(MAGIC));
-    magic.init(pretender, died);
+    died.giveInventory(MAGIC, 1);
+
+    let magic = findMagic(died);
+    if (magic)
+    {
+      magic.init(died);
+    }
   }
 
-  private void deflate(Actor died)
+  private void deflate(Actor revived)
   {
+    let magic = findMagic(revived);
+    if (magic)
+    {
+      magic.restore();
+    }
+  }
 
+  private be_Magic findMagic(Actor a)
+  {
+    return be_Magic(a.findInventory(MAGIC));
   }
 
   const MAGIC = "be_Magic";
