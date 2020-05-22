@@ -2,6 +2,7 @@ version 4.3.3
 
 class be_Bubble : Actor
 {
+
   Default
   {
     +Nogravity;
@@ -21,34 +22,67 @@ class be_Bubble : Actor
       BE_2 A 1;
       Loop;
   }
-}
 
-class be_Animator : Inventory
+} // class be_Bubble
+
+class be_Magic : Inventory
 {
-  void init()
+
+  void init(Actor pretender, Actor original)
   {
-    if (owner == NULL) { return; }
+    initOriginal(original);
+    initPretender(pretender);
+    initBubble();
 
-    mOrigScale = owner.scale;
     mLifetime  = 0;
+  }
 
+  private void initPretender(Actor pretender)
+  {
+    mPretender = pretender;
+
+    pretender.angle            = mOriginal.angle;
+    pretender.floatBobStrength = 0.2;
+    pretender.bFloatbob        = true;
+    pretender.bShootable       = false; // ?
+    pretender.bNoInteraction   = true;
+    pretender.bNogravity       = true;
+    pretender.A_SetTics(int.Max);
+    mOrigScale = owner.scale;
+
+    level.total_monsters -= pretender.bCountKill;
+  }
+
+  private void initOriginal(Actor original)
+  {
+    mOriginal            = original;
+    mOriginalRenderStyle = original.GetRenderStyle();
+    mOriginalAlpha       = original.alpha;
+
+    mOriginal.A_SetRenderStyle(0.0, STYLE_None);
+    // no need to save, it won't be used anymore.
+    mOriginal.deathSound = "";
+  }
+
+  private void initBubble()
+  {
     Vector3 bubblePos = owner.pos + (0, 0, owner.height / 2);
-    mBubble = be_Bubble(Actor.Spawn("be_Bubble", bubblePos));
-    mOrigBubbleScale = mBubble.scale;
-    mBubble.FloatBobPhase = owner.FloatBobPhase;
+    mBubble = Actor.Spawn("be_Bubble", bubblePos);
+    double bubbleScale = max(owner.radius / 20, owner.height / 40);
+    mOrigBubbleScale = mBubble.scale * bubbleScale;
+    mBubble.floatBobPhase = owner.FloatBobPhase;
     let shade = String.format( "%x%x%x%x%x%x"
-                             , random(6, 0xb)
-                             , random(6, 0xb)
-                             , random(6, 0xb)
-                             , random(6, 0xb)
-                             , random(6, 0xb)
-                             , random(6, 0xb)
+                             , random(9, 0xc)
+                             , random(9, 0xc)
+                             , random(9, 0xc)
+                             , random(9, 0xc)
+                             , random(9, 0xc)
+                             , random(9, 0xc)
                              );
     mBubble.setShade(shade);
   }
 
-  override
-  void Tick()
+  override void Tick()
   {
     if (owner == NULL) { return; }
 
@@ -70,53 +104,60 @@ class be_Animator : Inventory
     ++mLifetime;
   }
 
-  const DURATION = 35 / 2;
-  const TARGET_SCALE = 0.3;
+  const DURATION = 35 / 4;
+  const TARGET_SCALE = 0.1;
 
-  Vector2   mOrigScale;
-  Vector2   mOrigBubbleScale;
-  int       mLifetime;
-  be_Bubble mBubble;
-}
+  private Vector2   mOrigScale;
+  private Vector2   mOrigBubbleScale;
+  private int       mLifetime;
+
+  private int mOriginalRenderStyle;
+  private double mOriginalAlpha;
+
+  private Actor mBubble;
+  private Actor mPretender;
+  private Actor mOriginal;
+
+} // class be_Magic
 
 class be_EventHandler : EventHandler
 {
+
   override void WorldThingDied(WorldEvent event)
   {
-    Actor died = event.thing;
-
-    // Expect the unexpected.
-    if (died == NULL)
+    if (isValid(event))
     {
-      return;
+      inflate(event.thing);
     }
-
-    // Can't bubble yourself.
-    if (died is "PlayerPawn")
-    {
-      return;
-    }
-
-    died.A_SetRenderStyle(0.0, STYLE_None);
-    died.deathSound = "";
-
-    Vector3 pos = died.pos + (0, 0, 10);
-
-    Actor pretender = Actor.Spawn(died.getClass(), pos);
-    pretender.angle = died.angle;
-
-    pretender.giveInventory("be_Animator", 1);
-    let animator = be_Animator(pretender.findInventory("be_Animator"));
-    animator.init();
-
-    level.total_monsters -= pretender.bCountKill;
-
-    pretender.FloatBobStrength = 0.2;
-    pretender.A_SetTics(int.Max);
-    pretender.bFloatbob = true;
-    pretender.bShootable = false;
-    pretender.bNoInteraction = true;
-    pretender.bNogravity = true;
   }
 
-}
+  override void WorldThingRevived(WorldEvent event)
+  {
+    if (isValid(event))
+    {
+      deflate(event.thing);
+    }
+  }
+
+  private bool isValid(WorldEvent event)
+  {
+    return !(event.thing == NULL || event.thing is "PlayerPawn");
+  }
+
+  private void inflate(Actor died)
+  {
+    let pos       = died.pos + (0, 0, 10);
+    let pretender = Actor.Spawn(died.getClass(), pos);
+    pretender.giveInventory(MAGIC, 1);
+    let magic     = be_Magic(pretender.findInventory(MAGIC));
+    magic.init(pretender, died);
+  }
+
+  private void deflate(Actor died)
+  {
+
+  }
+
+  const MAGIC = "be_Magic";
+
+} // class be_EventHandler
