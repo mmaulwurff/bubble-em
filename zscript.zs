@@ -59,6 +59,7 @@ class be_Magic : Inventory
     pretender.bShootable       = false;
     pretender.bNoInteraction   = true;
     pretender.bNogravity       = true;
+    pretender.bIsMonster       = false;
     pretender.A_SetTics(int.Max);
     mOrigScale = pretender.scale;
 
