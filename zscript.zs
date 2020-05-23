@@ -165,6 +165,14 @@ class be_EventHandler : EventHandler
     }
   }
 
+  override void WorldThingSpawned(WorldEvent event)
+  {
+    if (event.thing)
+    {
+      event.thing.bNoExtremeDeath = true;
+    }
+  }
+
   private bool isValid(WorldEvent event)
   {
     return !(event.thing == NULL || event.thing is "PlayerPawn");
