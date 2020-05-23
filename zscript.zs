@@ -48,7 +48,7 @@ class be_Magic : Inventory
 
   private void initPretender()
   {
-    let pos       = mOriginal.pos + (0, 0, 10);
+    let pos       = makePretenderPos();
     let pretender = Actor.Spawn(mOriginal.getClass(), pos);
 
     mPretender = pretender;
@@ -56,7 +56,7 @@ class be_Magic : Inventory
     pretender.angle            = mOriginal.angle;
     pretender.floatBobStrength = 0.2;
     pretender.bFloatbob        = true;
-    pretender.bShootable       = false; // ?
+    pretender.bShootable       = false;
     pretender.bNoInteraction   = true;
     pretender.bNogravity       = true;
     pretender.A_SetTics(int.Max);
@@ -78,7 +78,7 @@ class be_Magic : Inventory
 
   private void initBubble()
   {
-    Vector3 bubblePos = mPretender.pos + (0, 0, mPretender.height / 2);
+    Vector3 bubblePos = makeBubblePos();
     mBubble = Actor.Spawn("be_Bubble", bubblePos);
     double bubbleScale = max(mPretender.radius / 20, mPretender.height / 40);
     mOrigBubbleScale = mBubble.scale * bubbleScale;
@@ -111,7 +111,23 @@ class be_Magic : Inventory
       mBubble.bFloatBob = true;
     }
 
+    if (mOriginal)
+    {
+      mPretender.setOrigin(makePretenderPos(), true);
+      mBubble   .setOrigin(makeBubblePos(), true);
+    }
+
     ++mLifetime;
+  }
+
+  private Vector3 makeBubblePos()
+  {
+    return mPretender.pos + (0, 0, mPretender.height * TARGET_SCALE / 2);
+  }
+
+  private Vector3 makePretenderPos()
+  {
+    return mOriginal.pos + (0, 0, 10);
   }
 
   const DURATION = 35 / 4;
