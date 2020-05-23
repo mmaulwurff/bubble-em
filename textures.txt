@@ -1,5 +1,7 @@
-Sprite be_2A0, 14, 12
+Sprite be_2A0, 48, 40
 {
   Patch be_1A0, 0, 0
-  Offset 7, 6
+  Offset 24, 20
+  XScale 4
+  YScale 4
 }

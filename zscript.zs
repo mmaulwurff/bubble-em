@@ -7,6 +7,7 @@ class be_Bubble : Actor
   {
     +Nogravity;
     +NoInteraction;
+    +ForceXYBillboard;
 
     FloatBobStrength 0.2;
 
