@@ -1,0 +1,3 @@
+[enu default]
+
+AM_MONSTERS = "Threats:";
