@@ -55,7 +55,7 @@ class be_Magic : Inventory
 
     pretender.angle            = mOriginal.angle;
     pretender.floatBobStrength = 0.2;
-    pretender.bFloatbob        = true;
+    pretender.bFloatBob        = true;
     pretender.bShootable       = false;
     pretender.bNoInteraction   = true;
     pretender.bNogravity       = true;
@@ -105,19 +105,23 @@ class be_Magic : Inventory
       mBubble.scale = scaleRatio * mOrigBubbleScale;
       mBubble.alpha = ratio * 0.6;
       mBubble.setOrigin(mPretender.pos + (0, 0, mPretender.height * scaleRatio / 2), true);
+
+      ++mLifetime;
     }
     else if (mLifetime == DURATION)
     {
       mBubble.bFloatBob = true;
     }
 
-    if (mOriginal)
+    // These things have to be set all the time.
+    mPretender.A_SetTics(int.Max);
+    mPretender.bFloatBob = true;
+
+    if (mOriginal && mOriginal.vel != (0, 0, 0))
     {
       mPretender.setOrigin(makePretenderPos(), true);
       mBubble   .setOrigin(makeBubblePos(), true);
     }
-
-    ++mLifetime;
   }
 
   private Vector3 makeBubblePos()
