@@ -20,7 +20,7 @@ class be_Bubble : Actor
   {
     Spawn:
       BE_2 A 1;
-      Loop;
+      loop;
   }
 
 } // class be_Bubble
@@ -44,6 +44,12 @@ class be_Magic : Inventory
     mPretender.destroy();
     mBubble.destroy();
     GoAwayAndDie();
+  }
+
+  void transfer()
+  {
+    mOriginal.RemoveInventory(self);
+    callTryPickup(mPretender);
   }
 
   private void initPretender()
@@ -178,6 +184,23 @@ class be_EventHandler : EventHandler
     }
   }
 
+  override void WorldThingDestroyed(WorldEvent event)
+  {
+    if (isValid(event))
+    {
+      transferMagic(event.thing);
+    }
+  }
+
+  private void transferMagic(Actor destroyed)
+  {
+    let magic = findMagic(destroyed);
+    if (magic)
+    {
+      magic.transfer();
+    }
+  }
+
   private bool isValid(WorldEvent event)
   {
     return !(event.thing == NULL || event.thing is "PlayerPawn");
@@ -185,7 +208,7 @@ class be_EventHandler : EventHandler
 
   private void inflate(Actor died)
   {
-    died.giveInventory(MAGIC, 1);
+    died.giveInventory(MAGIC_CLASS, 1);
 
     let magic = findMagic(died);
     if (magic)
@@ -205,9 +228,9 @@ class be_EventHandler : EventHandler
 
   private be_Magic findMagic(Actor a)
   {
-    return be_Magic(a.findInventory(MAGIC));
+    return be_Magic(a.findInventory(MAGIC_CLASS));
   }
 
-  const MAGIC = "be_Magic";
+  const MAGIC_CLASS = "be_Magic";
 
 } // class be_EventHandler
