@@ -71,6 +71,8 @@ class be_Magic : Inventory
     mOrigScale = pretender.scale;
 
     level.total_monsters -= pretender.bCountKill;
+
+    pretender.A_StartSound("be/swoosh");
   }
 
   private void initOriginal(Actor original)
