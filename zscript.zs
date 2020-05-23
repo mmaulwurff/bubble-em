@@ -90,7 +90,7 @@ class be_Magic : Inventory
   {
     Vector3 bubblePos = makeBubblePos();
     mBubble = Actor.Spawn("be_Bubble", bubblePos);
-    double bubbleScale = max(mPretender.radius / 20, mPretender.height / 40);
+    double bubbleScale = max(mPretender.radius / 16, mPretender.height / 32);
     mOrigBubbleScale = mBubble.scale * bubbleScale;
     mBubble.floatBobPhase = mPretender.floatBobPhase;
     let shade = String.format( "%x%x%x%x%x%x"
