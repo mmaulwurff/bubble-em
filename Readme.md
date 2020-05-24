@@ -9,6 +9,12 @@ they are put in safe bubbles instead.
 
 <img src="https://img.shields.io/github/downloads/mmaulwurff/bubble-em/total" />
 
+## Features
+
+- purely cosmetic (doesn't affect gameplay)
+- universal* (compatible with every GZDoom game)
+- sound effects
+
 ## Compatibility
 
 This mod should be compatible with every GZDoom game and mod. However, if death
