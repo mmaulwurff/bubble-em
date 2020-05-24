@@ -112,6 +112,11 @@ class be_Magic : Inventory
 
   override void Tick()
   {
+    if (mBubble == NULL || mPretender == NULL)
+    {
+      return;
+    }
+
     if (mLifetime < DURATION)
     {
       double ratio      = double(mLifetime) / DURATION;
