@@ -15,6 +15,8 @@ class be_Bubble : Actor
     Alpha  0;
     XScale 6.66;
     YScale 6.66;
+
+    Tag "Bubble";
   }
 
   States
