@@ -24,5 +24,6 @@ away.
 
 ## Credits
 
-- Bubble sound effect: [Teleport-01b.wav](https://freesound.org/people/DWOBoyle/sounds/474179/) by DWOBoyle (CC BY 3.0), edited by m8f
+- Bubble creation sound effect: [Teleport-01b.wav](https://freesound.org/people/DWOBoyle/sounds/474179/) by DWOBoyle (CC BY 3.0), edited by m8f
+- Bubble pop sound effect: [Pop 1.ogg](https://freesound.org/people/javapimp/sounds/439184/) by javapimp (CC0 1.0)
 - Bubble graphics: Accensus

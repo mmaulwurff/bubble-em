@@ -1,1 +1,2 @@
 be/swoosh "sounds/be_swoosh.ogg"
+be/pop    "sounds/be_pop.ogg"

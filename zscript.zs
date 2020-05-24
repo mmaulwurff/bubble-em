@@ -43,6 +43,7 @@ class be_Magic : Inventory
   void restore()
   {
     mOriginal.A_SetRenderStyle(mOriginalAlpha, mOriginalRenderStyle);
+    mOriginal.A_StartSound("be/pop");
 
     mPretender.destroy();
     mBubble.destroy();
