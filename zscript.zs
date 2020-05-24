@@ -70,8 +70,11 @@ class be_Magic : Inventory
     pretender.bNogravity       = true;
     pretender.bIsMonster       = false;
     pretender.bForceXYBillboard = true;
+    pretender.bRollSprite      = true;
+    pretender.bRollCenter      = true;
     pretender.A_SetTics(int.Max);
     mOrigScale = pretender.scale;
+    mRoll = random(-4, 4) / 10.0;
 
     level.total_monsters -= pretender.bCountKill;
 
@@ -129,6 +132,7 @@ class be_Magic : Inventory
     // These things have to be set all the time.
     mPretender.A_SetTics(int.Max);
     mPretender.bFloatBob = true;
+    mPretender.A_SetRoll(mPretender.roll + mRoll);
 
     if (mOriginal && mOriginal.vel != (0, 0, 0))
     {
@@ -160,6 +164,8 @@ class be_Magic : Inventory
   private Actor mBubble;
   private Actor mPretender;
   private Actor mOriginal;
+
+  private double mRoll;
 
 } // class be_Magic
 
