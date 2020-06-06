@@ -59,7 +59,7 @@ class be_Magic : Inventory
   private void initPretender()
   {
     let pos       = makePretenderPos();
-    let pretender = Actor.Spawn(mOriginal.getClass(), pos);
+    let pretender = Actor.Spawn(mOriginal.getClass(), pos, false);
 
     mPretender = pretender;
 
