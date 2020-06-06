@@ -21,6 +21,11 @@ This mod should be compatible with every GZDoom game and mod. However, if death
 animations include body parts that fly away, with this mod they will still fly
 away.
 
+Incompatible mods:
+
+- Zrift - Chasm in Doom - LE: enemies are invisible inside bubbles (checked on v1.1).
+- mk-champions (Champions): invisible enemies (checked on v2.666).
+
 ## Software used
 
 - Emacs
