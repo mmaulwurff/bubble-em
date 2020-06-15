@@ -73,6 +73,7 @@ class be_Magic : Inventory
     pretender.bForceXYBillboard = true;
     pretender.bRollSprite      = true;
     pretender.bRollCenter      = true;
+    pretender.health = -1;
     pretender.A_SetTics(int.Max);
     mOrigScale = pretender.scale;
     mRoll = random(-4, 4) / 10.0;
