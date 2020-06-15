@@ -222,7 +222,8 @@ class be_EventHandler : EventHandler
 
   private bool isValid(WorldEvent event)
   {
-    return !(event.thing == NULL || event.thing is "PlayerPawn");
+    let thing = event.thing;
+    return !(thing == NULL || thing is "PlayerPawn") && thing.bIsMonster;
   }
 
   private void inflate(Actor died)
