@@ -8,9 +8,9 @@
 !.gitignore
 !.gitattributes
 
-!**.txt
-!**.md
-!**.zs
-!**.sh
-!**.png
-!**.ogg
+!*.txt
+!*.md
+!*.zs
+!*.sh
+!*.png
+!*.ogg
