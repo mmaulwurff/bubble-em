@@ -1,4 +1,4 @@
-/* Copyright Alexander 'm8f' Kromm (mmaulwurff@gmail.com) 2020
+/* Copyright Alexander 'm8f' Kromm (mmaulwurff@gmail.com) 2020, 2022
  *
  * This file is a part of Bubble 'Em.
  *
@@ -50,7 +50,9 @@ class be_EventHandler : EventHandler
     }
   }
 
-  private void transferMagic(Actor destroyed)
+// private: ////////////////////////////////////////////////////////////////////////////////////////
+
+  private static void transferMagic(Actor destroyed)
   {
     let magic = findMagic(destroyed);
     if (magic)
@@ -59,13 +61,14 @@ class be_EventHandler : EventHandler
     }
   }
 
-  private bool isValid(WorldEvent event)
+  private static bool isValid(WorldEvent event)
   {
+    if (event == NULL) return false;
     let thing = event.thing;
     return !(thing == NULL || thing is "PlayerPawn") && thing.bIsMonster;
   }
 
-  private void inflate(Actor died)
+  private static void inflate(Actor died)
   {
     died.giveInventory(MAGIC_CLASS, 1);
 
@@ -76,7 +79,7 @@ class be_EventHandler : EventHandler
     }
   }
 
-  private void deflate(Actor revived)
+  private static void deflate(Actor revived)
   {
     let magic = findMagic(revived);
     if (magic)
@@ -85,7 +88,7 @@ class be_EventHandler : EventHandler
     }
   }
 
-  private be_Magic findMagic(Actor a)
+  private static be_Magic findMagic(Actor a)
   {
     return be_Magic(a.findInventory(MAGIC_CLASS));
   }
